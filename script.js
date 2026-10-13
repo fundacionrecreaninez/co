@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* ---- CONFIGURACIÓN: reemplaza aquí la URL de tu Web App ---- */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0dHFPRXvcI42sDnNDpbGtrEuPRbZt6Ux9sjT1LYhld5nDQA2J5pRzIGZXenZv0Kf2/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYw7QlV01Py8jkLsEU6YbJqK_KNHrm63Bs6X2zjmX5IR_DVY4H1_yN29KoC6zAG7bw/exec';
 
 /* Métodos de pago mostrados en el modal de compra */
 const DATOS_PAGO = {
