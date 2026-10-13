@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* ---- CONFIGURACIÓN: pega aquí la URL de tu Web App de Apps Script ---- */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPoE9C2Uc4jRPIteZdXOnA4HBKvN2kjaDY_FsgdsJZPzd6uPEm8v4pdl3nc_nyVNzC/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyRYc7F-FvKB_v5SkMY1H57TodnEdXgiO2yys-qrrtZAEyjHbDJ7jc9TnWjBbQvuRAi/exec';
 
 /* Datos de pago mostrados en el modal */
 const DATOS_PAGO = {
