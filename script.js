@@ -13,7 +13,7 @@ const DATOS_PAGO = {
 };
 
 /* Contraseña del panel admin */
-const ADMIN_PASS = 'admin';
+const ADMIN_PASS = 'Jose@Fernando';
 
 let RIFA_ACTUAL = null;
 let VENTAS_ACTUAL = [];
