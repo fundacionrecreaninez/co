@@ -3,13 +3,13 @@
    ========================================================================== */
 
 /* ---- CONFIGURACIÓN: pega aquí la URL de tu Web App de Apps Script ---- */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxxxx/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPoE9C2Uc4jRPIteZdXOnA4HBKvN2kjaDY_FsgdsJZPzd6uPEm8v4pdl3nc_nyVNzC/exec';
 
 /* Datos de pago mostrados en el modal */
 const DATOS_PAGO = {
-  nequi:     '300 000 0000',
-  daviplata: '300 000 0000',
-  llave:     '@recreaninez'
+  nequi:     '324 373 8833',
+  daviplata: 'NO DISPONIBLE',
+  llave:     'NO DISPONIBLE'
 };
 
 /* Contraseña del panel admin */
@@ -340,7 +340,7 @@ function initModalCompra() {
     // Validar campos requeridos
     const nombre   = $('#compraNombre').value.trim();
     const telefono = $('#compraTel').value.trim();
-    const email    = $('#compraEmail').value.trim();
+    const email    = $('#compraEmail') ? $('#compraEmail').value.trim() : '';
     const nota     = $('#compraNota') ? $('#compraNota').value.trim() : '';
 
     if (!nombre || !telefono || !email) {
