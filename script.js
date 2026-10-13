@@ -332,8 +332,15 @@ function initModalCompra() {
     btn.disabled = true;
 
     try {
-      const base64 = await archivoABase64(archivo);
-      const data = await postJSON({
+        console.log('📤 Enviando compra...', {
+          rifaId: RIFA_ACTUAL.rifaId,
+          numero: numeroSeleccionado,
+          archivo: archivo.name,
+          tamañoMB: (archivo.size / 1024 / 1024).toFixed(2)
+        });
+  
+        const base64 = await archivoABase64(archivo);
+        const data = await postJSON({
         action: 'compra',
         rifaId: RIFA_ACTUAL.rifaId,
         numero: numeroSeleccionado,
@@ -353,10 +360,11 @@ function initModalCompra() {
         }, 1500);
       } else throw new Error(data.message);
     } catch (err) {
-      msg.className = 'form-msg err';
-      msg.textContent = 'No pudimos registrar tu compra. Intenta de nuevo.';
-      console.error(err);
-    } finally { btn.disabled = false; }
+        msg.className = 'form-msg err';
+        // Mostramos el error real en pantalla + consola
+        msg.textContent = '❌ Error: ' + (err && err.message ? err.message : String(err));
+        console.error('DETALLE DEL ERROR:', err);
+      } finally { btn.disabled = false; }
   });
 }
 
@@ -412,6 +420,7 @@ function initAdmin() {
             valor: Number($('#rifaValor').value),
             total: Number($('#rifaTotal').value)
           });
+          console.log('📥 Respuesta del backend:', data);
         if (data.success) {
           msg.className = 'form-msg ok';
           msg.textContent = 'Rifa creada correctamente.';
