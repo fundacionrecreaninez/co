@@ -1,0 +1,14 @@
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Carpetas de editores
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Si más adelante separas las credenciales, descomenta estas líneas:
+# config.js
+# config.local.js

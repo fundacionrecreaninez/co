@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; img-src 'self' https: data:;">
+  <title>Nosotros | Fundación Recreaniñez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.png" type="image/png" />
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <img src="logo.png" alt="Logo Fundación Recreaniñez" class="brand-logo" />
+        <span class="brand-text"><strong>Recreaniñez</strong><small>Unidos por el bienestar infantil</small></span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li class="has-sub">
+            <a href="nosotros.html" class="active">Nosotros</a>
+            <button class="sub-toggle" type="button" aria-label="Abrir secciones de Nosotros" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <ul class="submenu">
+              <li><a href="#historia">Nuestra historia</a></li>
+              <li><a href="#mision">Misión</a></li>
+              <li><a href="#vision">Visión</a></li>
+              <li><a href="#valores">Valores</a></li>
+            </ul>
+          </li>
+          <li><a href="programas.html">Programas</a></li>
+          <li><a href="aliados.html">Aliados</a></li>
+          <li><a href="rifas.html">Rifas y Sorteos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero page-hero-nosotros">
+      <div class="container">
+        <span class="kicker light">Sobre la Fundación</span>
+        <h1>Quiénes somos</h1>
+        <p class="page-hero-sub">Una iniciativa de José y Fernando, hecha con el corazón por la niñez de San Jacinto, Bolívar.</p>
+      </div>
+    </section>
+
+    <section class="section" id="historia">
+      <div class="container narrow">
+        <header class="section-head reveal">
+          <span class="kicker">Nuestra historia</span>
+          <h2>De una idea de barrio a una causa con visión de futuro</h2>
+        </header>
+        <div class="rich-text reveal">
+          <p>Recreaniñez nació como una iniciativa de <strong>José y Fernando</strong>, dos vecinos convencidos de que los niños de San Jacinto merecían espacios seguros donde jugar, aprender y compartir. Empezó con jornadas comunitarias en las que un balón, unas cuerdas y muchas ganas bastaban para llenar la tarde de risas.</p>
+          <p>Con el tiempo, esas actividades crecieron: llegaron más familias, más voluntarios y más niños y niñas esperando su turno para participar. Lo que era una actividad aislada se convirtió en una agenda permanente de recreación, lúdica y encuentro comunitario.</p>
+          <p>Hoy Recreaniñez se encuentra en proceso de formalización como <strong>Fundación</strong> para ampliar su impacto, acceder a nuevas alianzas y garantizar la sostenibilidad de sus programas en la región de los Montes de María.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt-bg">
+      <div class="container">
+        <div class="grid grid-2">
+          <article class="block-feature reveal" id="mision">
+            <div class="icon-badge azul"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <h3>Misión</h3>
+            <p>Promover el bienestar de la niñez en San Jacinto, Bolívar, a través de actividades lúdicas, recreativas y de integración comunitaria. Generamos espacios seguros, incluyentes y formativos donde los niños y niñas puedan jugar, aprender, desarrollar habilidades para la vida y fortalecer valores como el trabajo en equipo, el respeto y la sana convivencia.</p>
+          </article>
+          <article class="block-feature reveal" id="vision">
+            <div class="icon-badge verde"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <h3>Visión</h3>
+            <p>En <strong>2030</strong>, ser reconocida en la región de los Montes de María como una organización líder en recreación infantil y desarrollo comunitario, destacada por su transparencia, impacto social y capacidad de articular esfuerzos con entidades públicas y privadas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="valores">
+      <div class="container">
+        <header class="section-head reveal">
+          <span class="kicker">Lo que nos mueve</span>
+          <h2>Nuestros valores</h2>
+          <p class="section-sub">Principios que guían cada actividad y cada decisión de la Fundación.</p>
+        </header>
+        <div class="grid grid-4 valores-grid">
+          <article class="value-card reveal"><div class="icon-badge azul"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div><h4>Compromiso</h4><p>Cumplimos lo que prometemos con la niñez y sus familias.</p></article>
+          <article class="value-card reveal"><div class="icon-badge verde"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h4>Transparencia</h4><p>Rendimos cuentas de cada aporte y cada actividad.</p></article>
+          <article class="value-card reveal"><div class="icon-badge amarillo"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><h4>Inclusión</h4><p>Todos los niños y niñas son bienvenidos sin excepción.</p></article>
+          <article class="value-card reveal"><div class="icon-badge azul"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div><h4>Trabajo en equipo</h4><p>Sumamos voluntades para lograr más y mejores resultados.</p></article>
+          <article class="value-card reveal"><div class="icon-badge verde"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><h4>Respeto</h4><p>Escuchamos y valoramos a cada persona de la comunidad.</p></article>
+          <article class="value-card reveal"><div class="icon-badge amarillo"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div><h4>Alegría</h4><p>El juego es nuestra herramienta más poderosa para transformar.</p></article>
+          <article class="value-card reveal"><div class="icon-badge azul"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Responsabilidad social</h4><p>Actuamos con ética y pensando en el bien común de San Jacinto.</p></article>
+          <article class="value-card reveal"><div class="icon-badge verde"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M5 7h14"/></svg></div><h4>Sostenibilidad</h4><p>Construimos para el largo plazo, cuidando cada recurso recibido.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="logo.png" alt="Logo Recreaniñez" class="footer-logo" />
+        <p class="footer-slogan">"Unidos por el bienestar infantil"</p>
+        <p class="footer-desc">Entidad Sin Ánimo de Lucro. San Jacinto, Bolívar, Colombia.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Enlaces rápidos</h4>
+        <ul>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="programas.html">Programas</a></li>
+          <li><a href="aliados.html">Aliados</a></li>
+          <li><a href="rifas.html">Rifas y Sorteos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contacto</h4>
+        <p><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg> WhatsApp: 302 602 2017</p>
+        <div class="social-row">
+          <a href="#" aria-label="Facebook" class="social-link"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"/></svg></a>
+          <a href="#" aria-label="Instagram" class="social-link"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok" class="social-link"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M21 8.5a6.6 6.6 0 0 1-4.7-1.9v6.98A6.4 6.4 0 1 1 9.9 7.2v3.2a3.2 3.2 0 1 0 3.2 3.2V2h3.2a6.6 6.6 0 0 0 4.7 4.4V8.5z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-location">San Jacinto, Bolívar — Colombia</p>
+      <p class="footer-copy">© 2026 Fundación Recreaniñez. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="proteccion.js"></script>
+</body>
+</html>
