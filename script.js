@@ -343,7 +343,7 @@ function initModalCompra() {
     const email    = $('#compraEmail') ? $('#compraEmail').value.trim() : '';
     const nota     = $('#compraNota') ? $('#compraNota').value.trim() : '';
 
-    if (!nombre || !telefono || !email) {
+    if (!nombre || !telefono) {
       msg.className = 'form-msg err';
       msg.textContent = 'Completa todos los campos obligatorios.';
       return;
