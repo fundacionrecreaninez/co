@@ -2,18 +2,18 @@
    Fundación Recreaniñez — JavaScript del frontend
    ========================================================================== */
 
-/* ---- CONFIGURACIÓN: reemplaza aquí la URL de tu Web App ---- */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYw7QlV01Py8jkLsEU6YbJqK_KNHrm63Bs6X2zjmX5IR_DVY4H1_yN29KoC6zAG7bw/exec';
+/* ---- CONFIGURACIÓN: pega aquí la URL de tu Web App de Apps Script ---- */
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxxxxxxxxx/exec';
 
-/* Métodos de pago mostrados en el modal de compra */
+/* Datos de pago mostrados en el modal */
 const DATOS_PAGO = {
-  nequi:     '324 373 8833',
-  daviplata: 'No disponible',
-  llave:     'No disponible',
+  nequi:     '300 000 0000',
+  daviplata: '300 000 0000',
+  llave:     '@recreaninez'
 };
 
 /* Contraseña del panel admin */
-const ADMIN_PASS = 'Jose@Fernando';
+const ADMIN_PASS = 'admin';
 
 let RIFA_ACTUAL = null;
 let VENTAS_ACTUAL = [];
@@ -31,11 +31,13 @@ async function postJSON(payload) {
   });
   return res.json();
 }
+
 async function getJSON(params) {
   const qs = new URLSearchParams(params).toString();
   const res = await fetch(`${APPS_SCRIPT_URL}?${qs}`);
   return res.json();
 }
+
 const formatoCOP = n => '$' + Number(n || 0).toLocaleString('es-CO');
 const pad2 = n => String(n).padStart(2, '0');
 
@@ -48,14 +50,26 @@ function archivoABase64(file) {
   });
 }
 
+/* Normaliza enlaces de Google Drive para que se vean como imagen */
+function normalizarUrlImagen(url) {
+  if (!url) return '';
+  const u = String(url).trim();
+  const match1 = u.match(/\/file\/d\/([^/]+)/);
+  if (match1) return 'https://drive.google.com/uc?export=view&id=' + match1[1];
+  const match2 = u.match(/[?&]id=([^&]+)/);
+  if (match2 && u.indexOf('drive.google.com') !== -1) {
+    return 'https://drive.google.com/uc?export=view&id=' + match2[1];
+  }
+  return u;
+}
+
 /* ==========================================================================
-   NAVEGACIÓN (menú móvil + submenú con botón chevron)
+   NAVEGACIÓN
    ========================================================================== */
 function initNav() {
   const toggle = $('#navToggle');
   const nav = $('#mainNav');
 
-  /* 1) Abrir/cerrar menú móvil completo */
   if (toggle && nav) {
     toggle.addEventListener('click', () => {
       const abierto = nav.classList.toggle('open');
@@ -63,7 +77,6 @@ function initNav() {
     });
   }
 
-  /* 2) Botón chevron que abre/cierra el submenú "Nosotros" (solo visible en móvil) */
   $$('.sub-toggle').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -73,19 +86,16 @@ function initNav() {
     });
   });
 
-  /* 3) Cerrar el menú móvil cuando el usuario hace clic en cualquier enlace */
   $$('.main-nav a').forEach(a => {
     a.addEventListener('click', () => {
       if (window.innerWidth <= 900 && nav) {
         nav.classList.remove('open');
         if (toggle) toggle.setAttribute('aria-expanded', 'false');
-        // También cerramos el submenú abierto
         $$('.has-sub.open').forEach(li => li.classList.remove('open'));
       }
     });
   });
 
-  /* 4) Sombra del header al hacer scroll */
   const header = $('#siteHeader');
   if (header) {
     const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 10);
@@ -93,7 +103,6 @@ function initNav() {
     onScroll();
   }
 
-  /* 5) Cerrar submenú si el usuario redimensiona a escritorio */
   window.addEventListener('resize', () => {
     if (window.innerWidth > 900) {
       $$('.has-sub.open').forEach(li => li.classList.remove('open'));
@@ -102,7 +111,6 @@ function initNav() {
   });
 }
 
-/* Animaciones reveal */
 function initReveal() {
   const els = $$('.reveal');
   if (!('IntersectionObserver' in window) || !els.length) {
@@ -144,10 +152,12 @@ function initFormContacto() {
         msg.className = 'form-msg ok';
         msg.textContent = '¡Gracias! Tu mensaje fue enviado correctamente.';
         form.reset();
-      } else throw new Error(data.message);
+      } else {
+        throw new Error(data.message || 'Error del servidor');
+      }
     } catch (err) {
       msg.className = 'form-msg err';
-      msg.textContent = 'No pudimos enviar el mensaje. Intenta de nuevo.';
+      msg.textContent = 'Error: ' + err.message;
       console.error(err);
     } finally { btn.disabled = false; }
   });
@@ -179,17 +189,19 @@ function initFormAliado() {
         msg.className = 'form-msg ok';
         msg.textContent = '¡Gracias! Recibimos tu postulación.';
         form.reset();
-      } else throw new Error(data.message);
+      } else {
+        throw new Error(data.message || 'Error del servidor');
+      }
     } catch (err) {
       msg.className = 'form-msg err';
-      msg.textContent = 'No pudimos enviar la postulación. Intenta de nuevo.';
+      msg.textContent = 'Error: ' + err.message;
       console.error(err);
     } finally { btn.disabled = false; }
   });
 }
 
 /* ==========================================================================
-   SISTEMA DE RIFAS
+   SISTEMA DE RIFAS — VISTA PÚBLICA
    ========================================================================== */
 async function cargarRifaActiva() {
   const header = $('#rifaTituloPublico');
@@ -211,16 +223,21 @@ async function cargarRifaActiva() {
     // Imagen del premio
     const imgWrap = $('#rifaImagenWrap');
     const imgEl = $('#rifaImagenPublica');
-    if (RIFA_ACTUAL.imagen && RIFA_ACTUAL.imagen.trim()) {
-      imgEl.src = normalizarUrlImagen(RIFA_ACTUAL.imagen);
-      imgEl.onerror = () => imgWrap.classList.add('hidden');
-      imgWrap.classList.remove('hidden');
-    } else {
-      imgWrap.classList.add('hidden');
+    if (imgWrap && imgEl) {
+      if (RIFA_ACTUAL.imagen && RIFA_ACTUAL.imagen.trim()) {
+        imgEl.src = normalizarUrlImagen(RIFA_ACTUAL.imagen);
+        imgEl.onerror = () => imgWrap.classList.add('hidden');
+        imgWrap.classList.remove('hidden');
+      } else {
+        imgWrap.classList.add('hidden');
+      }
     }
-    $('#pagoNequi').textContent     = DATOS_PAGO.nequi;
-    $('#pagoDaviplata').textContent = DATOS_PAGO.daviplata;
-    $('#pagoLlave').textContent     = DATOS_PAGO.llave;
+
+    // Datos de pago
+    if ($('#pagoNequi'))     $('#pagoNequi').textContent     = DATOS_PAGO.nequi;
+    if ($('#pagoDaviplata')) $('#pagoDaviplata').textContent = DATOS_PAGO.daviplata;
+    if ($('#pagoLlave'))     $('#pagoLlave').textContent     = DATOS_PAGO.llave;
+
     await cargarVentas(RIFA_ACTUAL.rifaId);
   } catch (err) {
     console.error('Error cargando rifa:', err);
@@ -241,8 +258,10 @@ async function cargarVentas(rifaId) {
 function renderGrid() {
   const grid = $('#gridNumeros');
   if (!grid || !RIFA_ACTUAL) return;
+
   const mapa = {};
-  VENTAS_ACTUAL.forEach(v => { mapa[v.numero] = v.estadoPago; });
+  VENTAS_ACTUAL.forEach(v => { mapa[pad2(v.numero)] = v.estadoPago; });
+
   grid.innerHTML = '';
   for (let i = 0; i < RIFA_ACTUAL.total; i++) {
     const num = pad2(i);
@@ -250,38 +269,24 @@ function renderGrid() {
     btn.type = 'button';
     btn.className = 'numero-btn';
     btn.textContent = num;
-        // Normalizamos por si en la hoja escribieron "pagado", "Pagado " con espacio, etc.
-        const estado = (mapa[num] || '').toString().trim().toLowerCase();
-        if (estado === 'pagado') {
-          btn.classList.add('vendido');
-          btn.disabled = true;
-          btn.title = 'Número vendido';
-        } else if (estado === 'por confirmar') {
-          btn.classList.add('reservado');
-          btn.disabled = true;
-          btn.title = 'Pago por confirmar';
-        } else {
+
+    const estado = (mapa[num] || '').toString().trim().toLowerCase();
+
+    if (estado === 'pagado') {
+      btn.classList.add('vendido');
+      btn.disabled = true;
+      btn.title = 'Número vendido';
+    } else if (estado === 'por confirmar') {
+      btn.classList.add('reservado');
+      btn.disabled = true;
+      btn.title = 'Pago por confirmar';
+    } else {
       btn.title = 'Disponible — clic para comprar';
       btn.addEventListener('click', () => abrirModalCompra(num));
     }
     grid.appendChild(btn);
   }
 }
-
-/* Normaliza enlaces de Google Drive para que se vean como imagen */
-function normalizarUrlImagen(url) {
-    if (!url) return '';
-    const u = String(url).trim();
-    // https://drive.google.com/file/d/ID/view  → formato directo
-    const match1 = u.match(/\/file\/d\/([^/]+)/);
-    if (match1) return 'https://drive.google.com/uc?export=view&id=' + match1[1];
-    // https://drive.google.com/open?id=ID
-    const match2 = u.match(/[?&]id=([^&]+)/);
-    if (match2 && u.indexOf('drive.google.com') !== -1) {
-      return 'https://drive.google.com/uc?export=view&id=' + match2[1];
-    }
-    return u;
-  }
 
 function renderProgreso() {
   if (!RIFA_ACTUAL) return;
@@ -293,6 +298,9 @@ function renderProgreso() {
   $('#progressCount').textContent = vendidos + ' / ' + total;
 }
 
+/* ==========================================================================
+   MODAL DE COMPRA
+   ========================================================================== */
 function abrirModalCompra(numero) {
   numeroSeleccionado = numero;
   $('#modalNumero').textContent = numero;
@@ -313,44 +321,65 @@ function cerrarModalCompra() {
 function initModalCompra() {
   const modal = $('#modalCompra');
   if (!modal) return;
+
   $('#modalCompraClose').addEventListener('click', cerrarModalCompra);
   modal.addEventListener('click', e => { if (e.target === modal) cerrarModalCompra(); });
 
-  $('#formCompra').addEventListener('submit', async e => {
+  const form = $('#formCompra');
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const msg = $('#msgCompra');
     const btn = $('#btnCompra');
-    if (!numeroSeleccionado) return;
+
+    if (!numeroSeleccionado) {
+      msg.className = 'form-msg err';
+      msg.textContent = 'No se ha seleccionado ningún número.';
+      return;
+    }
+
+    // Validar campos requeridos
+    const nombre   = $('#compraNombre').value.trim();
+    const telefono = $('#compraTel').value.trim();
+    const email    = $('#compraEmail').value.trim();
+    const nota     = $('#compraNota') ? $('#compraNota').value.trim() : '';
+
+    if (!nombre || !telefono || !email) {
+      msg.className = 'form-msg err';
+      msg.textContent = 'Completa todos los campos obligatorios.';
+      return;
+    }
 
     const fileInput = $('#compraComprobante');
     const archivo = fileInput.files[0];
-    if (!archivo) { msg.className = 'form-msg err'; msg.textContent = 'Debes subir el comprobante de pago.'; return; }
-    if (archivo.size > 5 * 1024 * 1024) { msg.className = 'form-msg err'; msg.textContent = 'El comprobante debe pesar menos de 5 MB.'; return; }
+    if (!archivo) {
+      msg.className = 'form-msg err';
+      msg.textContent = 'Debes subir el comprobante de pago.';
+      return;
+    }
+    if (archivo.size > 5 * 1024 * 1024) {
+      msg.className = 'form-msg err';
+      msg.textContent = 'El comprobante debe pesar menos de 5 MB.';
+      return;
+    }
 
     msg.className = 'form-msg';
     msg.textContent = 'Subiendo comprobante...';
     btn.disabled = true;
 
     try {
-        console.log('📤 Enviando compra...', {
-          rifaId: RIFA_ACTUAL.rifaId,
-          numero: numeroSeleccionado,
-          archivo: archivo.name,
-          tamañoMB: (archivo.size / 1024 / 1024).toFixed(2)
-        });
-  
-        const base64 = await archivoABase64(archivo);
-        const data = await postJSON({
+      const base64 = await archivoABase64(archivo);
+      const data = await postJSON({
         action: 'compra',
         rifaId: RIFA_ACTUAL.rifaId,
         numero: numeroSeleccionado,
-        nombre: $('#compraNombre').value.trim(),
-        telefono: $('#compraTel').value.trim(),
-        email: $('#compraEmail').value.trim(),
-        nota: $('#compraNota').value.trim(),
+        nombre: nombre,
+        telefono: telefono,
+        email: email,
+        nota: nota,
         archivoNombre: archivo.name,
         archivoBase64: base64
       });
+
       if (data.success) {
         msg.className = 'form-msg ok';
         msg.textContent = '¡Listo! Tu número quedó reservado. Te contactaremos para confirmar el pago.';
@@ -358,13 +387,14 @@ function initModalCompra() {
           cerrarModalCompra();
           await cargarVentas(RIFA_ACTUAL.rifaId);
         }, 1500);
-      } else throw new Error(data.message);
+      } else {
+        throw new Error(data.message || 'Error del servidor');
+      }
     } catch (err) {
-        msg.className = 'form-msg err';
-        // Mostramos el error real en pantalla + consola
-        msg.textContent = '❌ Error: ' + (err && err.message ? err.message : String(err));
-        console.error('DETALLE DEL ERROR:', err);
-      } finally { btn.disabled = false; }
+      msg.className = 'form-msg err';
+      msg.textContent = 'Error: ' + err.message;
+      console.error('DETALLE:', err);
+    } finally { btn.disabled = false; }
   });
 }
 
@@ -413,24 +443,25 @@ function initAdmin() {
       msg.textContent = 'Creando...';
       try {
         const data = await postJSON({
-            action: 'crearRifa',
-            titulo: $('#rifaTitulo').value.trim(),
-            premio: $('#rifaPremio').value.trim(),
-            imagen: $('#rifaImagen').value.trim(),
-            valor: Number($('#rifaValor').value),
-            total: Number($('#rifaTotal').value)
-          });
-          console.log('📥 Respuesta del backend:', data);
+          action: 'crearRifa',
+          titulo: $('#rifaTitulo').value.trim(),
+          premio: $('#rifaPremio').value.trim(),
+          imagen: $('#rifaImagen') ? $('#rifaImagen').value.trim() : '',
+          valor: Number($('#rifaValor').value),
+          total: Number($('#rifaTotal').value)
+        });
         if (data.success) {
           msg.className = 'form-msg ok';
           msg.textContent = 'Rifa creada correctamente.';
           formCrear.reset();
           await cargarRifaActiva();
           cargarSelectRifasAdmin();
-        } else throw new Error(data.message);
+        } else {
+          throw new Error(data.message || 'Error del servidor');
+        }
       } catch (err) {
         msg.className = 'form-msg err';
-        msg.textContent = 'No se pudo crear la rifa.';
+        msg.textContent = 'Error: ' + err.message;
         console.error(err);
       }
     });
