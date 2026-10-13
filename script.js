@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* ---- CONFIGURACIÓN: pega aquí la URL de tu Web App de Apps Script ---- */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyRYc7F-FvKB_v5SkMY1H57TodnEdXgiO2yys-qrrtZAEyjHbDJ7jc9TnWjBbQvuRAi/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYw7QlV01Py8jkLsEU6YbJqK_KNHrm63Bs6X2zjmX5IR_DVY4H1_yN29KoC6zAG7bw/exec';
 
 /* Datos de pago mostrados en el modal */
 const DATOS_PAGO = {
@@ -52,16 +52,16 @@ function archivoABase64(file) {
 
 /* Normaliza enlaces de Google Drive para que se vean como imagen */
 function normalizarUrlImagen(url) {
-  if (!url) return '';
-  const u = String(url).trim();
-  const match1 = u.match(/\/file\/d\/([^/]+)/);
-  if (match1) return 'https://drive.google.com/uc?export=view&id=' + match1[1];
-  const match2 = u.match(/[?&]id=([^&]+)/);
-  if (match2 && u.indexOf('drive.google.com') !== -1) {
-    return 'https://drive.google.com/uc?export=view&id=' + match2[1];
+    if (!url) return '';
+    const u = String(url).trim();
+    // Extraer ID de distintos formatos de Google Drive
+    const m = u.match(/\/file\/d\/([^/]+)/) || u.match(/[?&]id=([^&]+)/);
+    if (m && u.indexOf('drive.google.com') !== -1) {
+      // Endpoint "thumbnail" que SÍ funciona para <img> modernos
+      return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1200';
+    }
+    return u;
   }
-  return u;
-}
 
 /* ==========================================================================
    NAVEGACIÓN
