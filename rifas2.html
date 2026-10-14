@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifas v2 | Fundación Recreaniñez</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="logo.png" type="image/png" />
+
+  <style>
+    /* ========= Estilos exclusivos de la v2 (carrito) ========= */
+    .v2-topbar {
+      background: var(--azul);
+      color: #fff;
+      padding: 0.65rem 0;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .v2-topbar a { color: var(--amarillo); font-weight: 600; }
+
+    .v2-header {
+      background: #fff;
+      border-bottom: 1px solid var(--gris-borde);
+      padding: 0.85rem 0;
+    }
+    .v2-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .v2-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--azul);
+      text-decoration: none;
+    }
+    .v2-brand img { height: 48px; border-radius: 6px; }
+    .v2-brand strong { display: block; font-size: 1.1rem; font-weight: 800; }
+    .v2-brand small { font-size: 0.7rem; color: var(--texto-suave); }
+    .v2-volver {
+      font-size: 0.85rem;
+      color: var(--azul);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Barra del carrito (flotante inferior) */
+    .cart-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--azul-osc);
+      color: #fff;
+      padding: 0.9rem 1rem;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.25);
+      z-index: 90;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .cart-bar.visible { transform: translateY(0); }
+    .cart-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .cart-bar-info {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .cart-bar-info strong { color: var(--amarillo); font-size: 1.15rem; }
+    .cart-bar-info span { font-size: 0.9rem; opacity: 0.9; }
+    .cart-bar-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .cart-bar .btn-limpiar {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #fff;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .cart-bar .btn-limpiar:hover { background: rgba(255,255,255,0.1); }
+
+    /* Números en carrito */
+    .numero-btn.en-carrito {
+      background: #3b82f6;
+      color: #fff;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.4);
+    }
+    .numero-btn.en-carrito::after {
+      content: "✓";
+      position: absolute;
+      font-size: 0.7rem;
+      top: 2px;
+      right: 4px;
+      font-weight: 700;
+    }
+    .grid-numeros { position: relative; }
+    .numero-btn { position: relative; }
+
+    /* Modal v2 (con lista del carrito) */
+    .cart-items-list {
+      background: var(--gris);
+      border-radius: var(--radio-sm);
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .cart-items-list .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--gris-borde);
+    }
+    .cart-items-list .item:last-child { border-bottom: 0; }
+    .cart-items-list .item strong { color: var(--azul-osc); }
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--azul);
+      color: #fff;
+      border-radius: var(--radio-sm);
+      margin-bottom: 1.25rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .cart-total-row span:last-child { color: var(--amarillo); }
+
+    /* Admin: grupo de compras */
+    .grupo-item {
+      background: var(--gris);
+      border-radius: var(--radio-sm);
+      border-left: 4px solid var(--amarillo);
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+    .grupo-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .grupo-head strong { color: var(--azul-osc); }
+    .grupo-datos {
+      font-size: 0.82rem;
+      color: var(--texto-suave);
+      line-height: 1.5;
+      margin: 0.35rem 0;
+    }
+    .grupo-numeros {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.5rem 0;
+    }
+    .grupo-num {
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+      border-radius: 6px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--azul);
+    }
+    .grupo-acciones { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+    .btn-mini {
+      padding: 0.45rem 0.8rem;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      border: 0;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-mini.btn-ver { background: var(--azul); color: #fff; }
+    .btn-mini.btn-ver:hover { background: var(--azul-osc); color: #fff; }
+    .btn-mini.btn-confirmar { background: var(--verde); color: #fff; }
+    .btn-mini.btn-confirmar:hover { background: var(--verde-osc); }
+    .btn-mini.btn-rechazar { background: #dc2626; color: #fff; }
+    .btn-mini.btn-rechazar:hover { background: #991b1b; }
+    .btn-mini:disabled { opacity: 0.5; cursor: wait; }
+    .empty-msg { color: var(--texto-suave); font-size: 0.9rem; margin: 0; padding: 0.5rem 0; }
+
+    @media (max-width: 620px) {
+      .cart-bar-info { font-size: 0.85rem; gap: 0.75rem; }
+      .cart-bar-info strong { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<!-- 
+  <div class="v2-topbar">
+    Versión 2 — Carrito de compras · <a href="../rifas.html">Volver a la versión anterior</a>
+  </div>
+-->
+
+  <header class="v2-header">
+    <div class="container v2-header-inner">
+      <a href="../index.html" class="v2-brand">
+        <img src="logo.png" alt="Logo Recreaniñez" />
+        <span>
+          <strong>Recreaniñez</strong>
+          <small>Unidos por el bienestar infantil</small>
+        </span>
+      </a>
+      <a href="https://fundacionrecreaninez.github.io/co/index.html" class="v2-volver">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Ir al sitio principal
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero page-hero-rifas">
+      <div class="container">
+        <span class="kicker light">Rifas solidarias </span>
+        <h1>Rifas y Sorteos</h1>
+        <p class="page-hero-sub">Comprar un número es aportar directamente a los programas por la niñez de San, Jacinto Bolivar. Selecciona uno o varios números, revisa el total y realiza un solo pago.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-bottom: 120px;">
+      <div class="container">
+        <div class="admin-bar">
+          <button id="btnToggleAdmin" class="btn btn-ghost-dark small">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Panel administrador
+          </button>
+        </div>
+
+        <section id="panelAdmin" class="admin-panel hidden">
+          <header class="admin-head">
+            <h2>Panel de administración</h2>
+            <p>Solo José Landero y Fernando Caballero (representantes) deben usar este panel.</p>
+          </header>
+
+          <div id="adminLogin" class="admin-login">
+            <div class="field">
+              <label for="adminPass">Contraseña</label>
+              <input type="password" id="adminPass" placeholder="Ingresa la contraseña" />
+            </div>
+            <button class="btn btn-primary" id="btnAdminLogin">Entrar</button>
+            <p class="form-msg" id="adminLoginMsg"></p>
+          </div>
+
+          <div id="adminContent" class="hidden">
+            <div class="admin-tabs">
+              <button class="admin-tab active" data-tab="crear">Crear rifa</button>
+              <button class="admin-tab" data-tab="ventas">Ventas y sorteo</button>
+            </div>
+
+            <div class="admin-tab-panel" data-panel="crear">
+              <form id="formCrearRifa" class="form-card">
+                <div class="field-row">
+                  <div class="field">
+                    <label for="rifaTitulo">Título de la rifa *</label>
+                    <input type="text" id="rifaTitulo" required placeholder="Ej: Rifa solidaria de diciembre" />
+                  </div>
+                  <div class="field">
+                    <label for="rifaTotal">Cantidad de números *</label>
+                    <input type="number" id="rifaTotal" required min="10" max="1000" value="100" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="rifaPremio">Premio *</label>
+                  <input type="text" id="rifaPremio" required placeholder="Ej: Bicicleta todo terreno" />
+                </div>
+                <div class="field">
+                  <label for="rifaImagen">Imagen del premio (URL)</label>
+                  <input type="url" id="rifaImagen" placeholder="https://..." />
+                  <small class="field-help">Opcional. Enlace directo de la imagen del premio.</small>
+                </div>
+                <div class="field">
+                  <label for="rifaValor">Valor por número (COP) *</label>
+                  <input type="number" id="rifaValor" required min="500" step="100" value="3000" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Publicar rifa</button>
+                <p class="form-msg" id="msgCrearRifa"></p>
+              </form>
+            </div>
+
+            <div class="admin-tab-panel hidden" data-panel="ventas">
+                <div class="field">
+                  <label for="adminSelectRifa">Seleccionar rifa</label>
+                  <select id="adminSelectRifa"></select>
+                </div>
+              
+                <div class="admin-stats">
+                  <div class="stat"><span class="stat-num" id="statVendidos">0</span><span class="stat-label">Números vendidos</span></div>
+                  <div class="stat"><span class="stat-num" id="statDisponibles">0</span><span class="stat-label">Disponibles</span></div>
+                  <div class="stat"><span class="stat-num" id="statRecaudo">$0</span><span class="stat-label">Recaudo estimado</span></div>
+                </div>
+              
+                <h4 style="margin: 1.5rem 0 0.75rem; color: var(--azul-osc);">Compras por confirmar</h4>
+                <div id="listaPendientes">
+                  <p class="empty-msg">No hay compras pendientes.</p>
+                </div>
+              
+                <div class="admin-draw" style="margin-top: 1.5rem;">
+                  <button id="btnSortear" class="btn btn-accent">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+                    Realizar sorteo
+                  </button>
+                </div>
+                <div id="ganadorBox" class="ganador-box hidden"></div>
+              </div>
+          </div>
+        </section>
+
+        <section id="rifaPublica">
+          <div class="rifa-header">
+            <h2 id="rifaTituloPublico">Cargando rifa...</h2>
+            <p id="rifaPremioPublico" class="rifa-premio"></p>
+            <div id="rifaImagenWrap" class="rifa-imagen-wrap hidden">
+              <img id="rifaImagenPublica" src="" alt="Imagen del premio" class="rifa-imagen" />
+            </div>
+            <p class="rifa-meta">Valor por número: <strong id="rifaValorPublico">$0</strong><span class="dot-sep">·</span><span id="rifaTotalPublico">0 números</span></p>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-info">
+              <span id="progressText">0% vendido</span>
+              <span id="progressCount">0 / 0</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          </div>
+
+          <div class="rifa-legend">
+            <span><span class="legend-dot disponible"></span> Disponible</span>
+            <span><span class="legend-dot vendido"></span> Vendido</span>
+            <span><span class="legend-dot reservado"></span> Por confirmar</span>
+            <span><span class="legend-dot" style="background:#3b82f6;"></span> En tu carrito</span>
+          </div>
+
+          <div id="gridNumeros" class="grid-numeros"></div>
+
+          <p style="text-align:center; font-size: 0.85rem; color: var(--texto-suave); margin-top: 1.5rem;">
+            Toca los números que quieras comprar. Se irán sumando al carrito.
+          </p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="cartBar" class="cart-bar">
+    <div class="cart-bar-inner">
+      <div class="cart-bar-info">
+        <span><strong id="cartCount">0</strong> números seleccionados</span>
+        <span>Total: <strong id="cartTotal">$0</strong></span>
+      </div>
+      <div class="cart-bar-actions">
+        <button type="button" class="btn-limpiar" id="btnLimpiarCarrito">Limpiar</button>
+        <button type="button" class="btn btn-accent" id="btnComprar">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Comprar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalCompra" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <button class="modal-close" id="modalCompraClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+
+      <h3>Resumen de tu compra</h3>
+
+      <div class="cart-items-list" id="cartItemsList"></div>
+      <div class="cart-total-row">
+        <span>Total a pagar</span>
+        <span id="modalTotal">$0</span>
+      </div>
+
+      <div class="pago-bloque">
+        <h4>1. Realiza el pago</h4>
+        <p class="pago-nota">Transfiere el total por cualquiera de estos medios. Guarda el comprobante para subirlo abajo.</p>
+        <div class="pago-metodos">
+          <div class="pago-metodo">
+            <div class="pago-info"><strong>Nequi #1</strong><span>Número: <em id="pagoNequi">—</em></span></div>
+            <div class="qr-box">
+              <img src="QR Nequi.jpg" alt="QR Nequi" class="qr-img" data-qr="nequi" />
+              <div class="qr-placeholder">QR<br>Nequi</div>
+            </div>
+          </div>
+          <div class="pago-metodo">
+            <div class="pago-info"><strong>Nequi #2</strong><span>Número: <em id="pagoDaviplata">—</em></span></div>
+            <div class="qr-box">
+              <img src="QR Daviplata.png" alt="QR Daviplata" class="qr-img" data-qr="daviplata" />
+              <div class="qr-placeholder">QR<br>Nequi Fernando</div>
+            </div>
+          </div>
+          <div class="pago-metodo">
+            <div class="pago-info"><strong>Bancolombia / Bre-B</strong><span>Llave: <em id="pagoLlave">—</em></span></div>
+            <div class="qr-box">
+              <img src="" alt="QR Bancolombia" class="qr-img" data-qr="bancolombia" />
+              <div class="qr-placeholder">QR<br>Bancolombia [NO DISPONIBLE]</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form id="formCompra" class="form-card" enctype="multipart/form-data">
+        <h4>2. Tus datos y comprobante</h4>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="compraNombre">Nombre completo *</label>
+            <input type="text" id="compraNombre" required placeholder="Ej: María Pérez Gómez" />
+          </div>
+          <div class="field">
+            <label for="compraTel">Teléfono / WhatsApp *</label>
+            <input type="tel" id="compraTel" required placeholder="Ej: 3026022017" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="compraDireccion">Dirección completa *</label>
+          <input type="text" id="compraDireccion" required placeholder="Ej: Calle 12 #4-56, Barrio El Centro, San Jacinto, Bolívar" />
+          <small class="field-help">Incluye barrio, municipio y referencias si aplica.</small>
+        </div>
+
+        <div class="field">
+          <label for="compraComprobante">Comprobante de pago (imagen o PDF) *</label>
+          <input type="file" id="compraComprobante" required accept="image/*,application/pdf" />
+          <small class="field-help">Formatos permitidos: JPG, PNG, PDF. Máximo 5 MB.</small>
+        </div>
+
+        <div class="field">
+          <label for="compraNota">Nota adicional (opcional)</label>
+          <textarea id="compraNota" rows="2" placeholder="Ej: Pago realizado desde el número 300..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="btnCompra">Enviar registro para validación</button>
+        <p class="form-msg" id="msgCompra" role="status"></p>
+        <p class="aviso-validacion">
+          Tus números quedarán como <strong>"Por confirmar"</strong> hasta que un administrador valide el comprobante.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="../logo.png" alt="Logo Recreaniñez" class="footer-logo" />
+        <p class="footer-slogan">"Unidos por el bienestar infantil"</p>
+        <p class="footer-desc">Entidad Sin Ánimo de Lucro. San Jacinto, Bolívar, Colombia.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Enlaces rápidos</h4>
+        <ul>
+          <li><a href="../index.html">Inicio</a></li>
+          <li><a href="../nosotros.html">Nosotros</a></li>
+          <li><a href="../programas.html">Programas</a></li>
+          <li><a href="../rifas-v2/index.html">Rifas</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contacto</h4>
+        <p><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg> WhatsApp: 302 602 2017</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-location">San Jacinto, Bolívar - Colombia</p>
+      <p class="footer-copy">© 2026 Fundación Recreaniñez. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="script2.js"></script>
+</body>
+</html>
